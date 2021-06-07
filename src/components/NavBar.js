@@ -21,7 +21,7 @@ const NavBar = ({ user }) => {
   );
 
   return (
-    <div>
+    <div className='nav-container'>
       <Navbar color='light' light expand="md">
         <h3 className="navbar-home">Home</h3>
         <h3 className="navbar-sites">Sites</h3>
