@@ -177,13 +177,12 @@ const SiteForm = ({
                                                  id={workerInfo.workerID}
                                                  toggle={false}>
                 <FormGroup
-                   onClick={handleSelectedWorkers(workerInfo.workerID)} >
+                   onClick={() => handleSelectedWorkers(workerInfo.workerID)} >
                   <Label check>
                     <Input
                        name='isWorkerChecked'
                        id={workerInfo.workerID}
                        type="checkbox"
-                       onClick={''}
                       //  checked={storedWorkersIDsOnSite.includes(workerInfo.workerID)}
                     />{' '}
                       {workerInfo.workerName}
