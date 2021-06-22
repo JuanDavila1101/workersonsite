@@ -5,24 +5,38 @@ const dbURL = firebaseConfig.databaseURL;
 
 const getWorkersInSite = (siteID) => new Promise((resolve, reject) => {
   axios.get(`${dbURL}/workerInSite.json?orderBy="siteID"&equalTo="${siteID}"`)
-    .then((response) => resolve(Object.values(response.data)))
+    .then((response) => {
+      if (response.data) {
+        resolve(Object.values(response.data));
+      } else {
+        resolve([]);
+      }
+    })
     .catch((error) => reject(error));
 });
 
-const addWorkerToSite = (workerSiteObject, siteID) => new Promise((resolve, reject) => {
-  const workerSiteObjectTemp = ({ ...workerSiteObject, siteID });
-  debugger;
-  axios.post(`${dbURL}/workerInSite.json`, workerSiteObjectTemp)
+const addWorkerToSite = (workerSiteObject) => new Promise((resolve, reject) => {
+  axios.post(`${dbURL}/workerInSite.json`, workerSiteObject)
+    .then((response) => {
+      const body = { workerInSiteID: response.data.name };
+      axios.patch(`${dbURL}/workerInSite/${response.data.name}.json`, body);
+    }).then(resolve)
+    .catch((error) => reject(error));
+});
+
+const deleteWorkerInSite = (workerInSiteID) => new Promise((resolve, reject) => {
+  axios.delete(`${dbURL}/workerInSite/${workerInSiteID}.json`)
     .then(() => resolve())
     .catch((error) => reject(error));
 });
 
-const deleteworkerOnSite = (siteID, workerID) => new Promise((resolve, reject) => {
-  console.warn(`${dbURL}/workerInSite.json?orderBy="workerID"&equalTo="${workerID}"&orderBy="siteID"&equalTo="${siteID}"`);
-  debugger;
-  axios.delete(`${dbURL}/workerInSite.json?orderBy="workerID"&equalTo="${workerID}"&orderBy="siteID"&equalTo="${siteID}"`)
-    .then(() => resolve())
-    .catch((error) => reject(error));
+const deleteAllworkersOnSite = (siteID) => new Promise((resolve, reject) => {
+  getWorkersInSite(siteID).then((workersInSiteArray) => {
+    const deleteAllWorkers = workersInSiteArray.map((currentWorkerInSite) => deleteWorkerInSite(currentWorkerInSite.workerInSiteID));
+    Promise.all(deleteAllWorkers).then((error) => reject(error));
+  }).catch((error) => reject(error));
 });
 
-export { getWorkersInSite, addWorkerToSite, deleteworkerOnSite };
+export {
+  getWorkersInSite, addWorkerToSite, deleteAllworkersOnSite
+};

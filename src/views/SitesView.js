@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SiteCard from '../components/SiteCard';
 
-function SitesView({ sites, setSites, user }) {
+function SitesView({
+  sites, setSites, user, workers
+}) {
   return (
     <>
       <div className="sites-container">
@@ -19,6 +21,8 @@ function SitesView({ sites, setSites, user }) {
               siteDescription={siteInformation.siteDescription}
               isJobFinished={siteInformation.isJobFinished}
               creatorID={siteInformation.creatorID}
+              workers={workers}
+              workersIDsOnSite={[]}
             />
           ))
         }
@@ -30,7 +34,8 @@ function SitesView({ sites, setSites, user }) {
 SitesView.propTypes = {
   sites: PropTypes.array.isRequired,
   setSites: PropTypes.func.isRequired,
-  user: PropTypes.any.isRequired
+  user: PropTypes.any,
+  workers: PropTypes.array.isRequired
 };
 
 export default SitesView;

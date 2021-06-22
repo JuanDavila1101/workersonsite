@@ -1,54 +1,34 @@
 import axios from 'axios';
 import firebaseConfig from '../apiKeys';
-// import { addWorkerToSite } from './WorkerInSiteData';
+import { addWorkerToSite } from './WorkerInSiteData';
 
 const dbURL = firebaseConfig.databaseURL;
 
 const getSites = (uid) => new Promise((resolve, reject) => {
   axios.get(`${dbURL}/sites.json?orderBy="creatorID"&equalTo="${uid}"`)
-    .then((response) => resolve(Object.values(response.data)))
+    .then((response) => {
+      if (response.data) {
+        resolve(Object.values(response.data));
+      } else {
+        resolve([]);
+      }
+    })
     .catch((error) => reject(error));
 });
 
-// const addSite = (siteObject, uid) => new Promise((resolve, reject) => {
-//   axios.post(`${dbURL}/sites.json`, siteObject)
-//     .then((response) => {
-//       const body = { siteID: response.data.name };
-//       axios.patch(`${dbURL}/sites/${response.data.name}.json`, body)
-//         .then(() => {
-//           getSites(uid).then((sitesArray) => resolve(sitesArray));
-//         });
-//     }).catch((error) => reject(error));
-// });
-
-// const addSite = (siteObject, uid, workersInSiteChanges) => new Promise((resolve, reject) => {
-//   axios.post(`${dbURL}/sites.json`, siteObject)
-//     .then((response) => {
-//       const body = { siteID: response.data.name };
-
-//       // workersInSiteChanges.forEach(async (workerinfo) => {
-//       //   await addWorkerToSite(workerinfo, response.data.name);
-//       // });
-
-//       axios.patch(`${dbURL}/sites/${response.data.name}.json`, body)
-//         .then(() => {
-//           workersInSiteChanges.forEach(async (workerinfo) => {
-//             await addWorkerToSite(workerinfo, response.data.name);
-//           });
-
-//           getSites(uid).then((sitesArray) => resolve(sitesArray));
-//         });
-//     }).catch((error) => reject(error));
-// });
-
-const addSite = (siteObject) => new Promise((resolve, reject) => {
+const addSite = (siteObject, uid, workersInSiteChanges) => new Promise((resolve, reject) => {
   axios.post(`${dbURL}/sites.json`, siteObject)
     .then((response) => {
       const body = { siteID: response.data.name };
-      axios.patch(`${dbURL}/sites/${response.data.name}.json`, body)
-        .then(() => resolve(response.data.name))
-        .catch((error) => reject(error));
-    });
+
+      const addingWorkersToSite = workersInSiteChanges.map((workerinfo) => addWorkerToSite({ ...workerinfo, siteID: response.data.name }));
+      const patchingTheNewSite = axios.patch(`${dbURL}/sites/${response.data.name}.json`, body);
+
+      Promise.all([addingWorkersToSite, patchingTheNewSite])
+        .then(() => {
+          getSites(uid).then((sitesArray) => resolve(sitesArray));
+        });
+    }).catch((error) => reject(error));
 });
 
 const deleteSite = (siteID, uid) => new Promise((resolve, reject) => {

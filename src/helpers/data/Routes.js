@@ -22,6 +22,7 @@ export default function Routes({
                              sites={sites}
                              setSites={setSites}
                              user={user}
+                             workers={workers}
                              />)
                     }
         />

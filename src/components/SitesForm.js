@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  FormGroup, Form, Label, Input, Button, DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown
+  FormGroup, Form, Label, Input, Button, DropdownToggle, DropdownMenu, DropdownItem, Dropdown
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { addSite, updateSite } from '../helpers/data/sitesData';
 import { getWorkers } from '../helpers/data/workersData';
 import { getWorkersInSite } from '../helpers/data/WorkerInSiteData';
-// import { Dropdown } from 'bootstrap';
 
 const SiteForm = ({
   formTitle,
@@ -34,12 +33,8 @@ const SiteForm = ({
   const toggle = () => setOpen(!dropdownOpen);
   const [allWorkers, setAllWorkers] = useState([]);
   const [storedWorkersIDsOnSite, setStoredWorkersIDsOnSite] = useState([]);
-  // const [workersInSiteChanges, setWorkersInSiteChanges] = useState([]);
+  const [workersInSiteChanges0, setWorkersInSiteChanges0] = useState([]);
   const workersInSiteChanges = [];
-  const [newSiteID, setNewSiteID] = useState('');
-
-  // getWorkers(user ? user.uid : '').then((workersArray) => setAllWorkers(workersArray));
-  // getWorkersInSite(site.siteID).then((selectedWorkersArray) => setStoredWorkersIDsOnSite(selectedWorkersArray));
 
   useEffect(() => {
     getWorkers(user ? user.uid : '').then((workersArray) => setAllWorkers(workersArray));
@@ -47,32 +42,17 @@ const SiteForm = ({
   }, []);
 
   const handleSelectedWorkers = (selectedWorkerID) => {
-    console.warn(selectedWorkerID);
-    console.warn(storedWorkersIDsOnSite);
-    console.warn(storedWorkersIDsOnSite.includes(selectedWorkerID));
-    console.warn(allWorkers.includes({ workerID: `${selectedWorkerID}` }));
-    // console.warn(allWorkers.workerID.findIndex(selectedWorkerID));
-    console.warn(allWorkers.find((x) => x.workerID === selectedWorkerID));
-    console.warn(allWorkers.find((x) => x.workerID === selectedWorkerID));
-
-    const temp = allWorkers.find((x) => x.workerID === selectedWorkerID);
-    console.warn(temp);
-
-    const isWorkerOnSite = (allWorkers.find((x) => x.workerID === selectedWorkerID));
-    console.warn(isWorkerOnSite);
-
     const isWorkerOnSite0 = (storedWorkersIDsOnSite.find((x) => x.workerID === selectedWorkerID) === null ? 'true' : 'false');
-    console.warn(isWorkerOnSite0);
 
-    console.warn(allWorkers);
+    workersInSiteChanges0.forEach((selected) => {
+      workersInSiteChanges.push(selected);
+    });
 
     if (isWorkerOnSite0 === 'false') {
       const obj = { siteID: null, workerID: selectedWorkerID };
       workersInSiteChanges.push(obj);
-      console.warn(workersInSiteChanges);
+      setWorkersInSiteChanges0(workersInSiteChanges);
     }
-    console.warn(workersInSiteChanges);
-    debugger;
   };
 
   const handleInputChange = (e) => {
@@ -88,12 +68,7 @@ const SiteForm = ({
     if (site.siteID) {
       updateSite(site, creatorID).then((sitesArray) => setSites(sitesArray));
     } else {
-      // addSite(site, user.uid).then((sitesArray) => setSites(sitesArray));
-      // addSite(site, user.uid, workersInSiteChanges).then((sitesArray) => setSites(sitesArray));
-      addSite(site).then((newSiteFirebaseKey) => setNewSiteID(newSiteFirebaseKey));
-      // workersInSiteChanges.forEach((tempWorker) => {addWorkerToSite(tempWorker);});
-      console.warn(newSiteID);
-      debugger;
+      addSite(site, user.uid, workersInSiteChanges0).then((sitesArray) => setSites(sitesArray));
     }
 
     setSite({
@@ -157,7 +132,7 @@ const SiteForm = ({
             />
           </FormGroup>
           <FormGroup>
-            <Label>Is the Job Site Finished</Label>
+            <Label>Is the Job Site Finished
             <Input
               name='isJobFinished'
               id='isJobFinished'
@@ -165,33 +140,34 @@ const SiteForm = ({
               value={site.isJobFinished}
               onChange={handleInputChange}
             />
+            </Label>
           </FormGroup>
 
-          <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+          <Dropdown isOpen={dropdownOpen} toggle={toggle}>
             <DropdownToggle caret>
-              Small Button
+              Workers
             </DropdownToggle>
             <DropdownMenu>
               {allWorkers.map((workerInfo) => <DropdownItem
                                                  key={workerInfo.workerID}
                                                  id={workerInfo.workerID}
-                                                 toggle={false}>
-                <FormGroup
-                   onClick={() => handleSelectedWorkers(workerInfo.workerID)} >
+                                                 toggle={false}
+                                               >
                   <Label check>
                     <Input
                        name='isWorkerChecked'
                        id={workerInfo.workerID}
                        type="checkbox"
-                      //  checked={storedWorkersIDsOnSite.includes(workerInfo.workerID)}
+                       checked={workersInSiteChanges0.find((x) => x.workerID === workerInfo.workerID)}
+                       value={workersInSiteChanges0.find((x) => x.workerID === workerInfo.workerID)}
+                       onClick={() => handleSelectedWorkers(workerInfo.workerID)}
                     />{' '}
                       {workerInfo.workerName}
                   </Label>
-                </FormGroup>
               </DropdownItem>)}
-            </DropdownMenu>
 
-          </ButtonDropdown>
+            </DropdownMenu>
+          </Dropdown>
 
           <Button type='submit'>Submit</Button>
         </Form>
@@ -210,7 +186,8 @@ SiteForm.propTypes = {
   sitePicture: PropTypes.string,
   siteDescription: PropTypes.string,
   isJobFinished: PropTypes.bool,
-  creatorID: PropTypes.string
+  creatorID: PropTypes.string,
+  workersIDsOnSite: PropTypes.array
 };
 
 export default SiteForm;

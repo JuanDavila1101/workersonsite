@@ -32,7 +32,6 @@ const WorkerForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (worker.workerID) {
-      // debugger;
       updateWorker(worker, user.uid).then((workersArray) => setWorkers(workersArray));
     } else {
       addWorker(worker, user.uid).then((workersArray) => setWorkers(workersArray));
