@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-// import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import {
-  Button, Card, CardText, CardTitle, CardBody, CardSubtitle, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, FormGroup, Label, Input
+  Button, Card, CardText, CardTitle, CardBody, CardSubtitle, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Label
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { deleteSite } from '../helpers/data/sitesData';
 import SiteForm from './SitesForm';
-// import { getWorkers } from '../helpers/data/workersData';
+import { deleteAllworkersOnSite, getWorkersInSite } from '../helpers/data/WorkerInSiteData';
 
 const SiteCard = ({
   setSites,
@@ -18,20 +17,21 @@ const SiteCard = ({
   siteDescription,
   isJobFinished,
   creatorID,
+  workers,
 }) => {
   const [editing, setEditing] = useState(false);
-  // const history = useHistory();
   const [dropdownOpen, setOpen] = useState(false);
   const toggle = () => setOpen(!dropdownOpen);
-  // const [allWorkers, setAllWorkers] = useState([]);
+  const [storedWorkersIDsOnSite, setStoredWorkersIDsOnSite] = useState([]);
 
-  // useEffect(() => {
-  //   getWorkers
-  // }, []);
+  useEffect(() => {
+    getWorkersInSite(siteID).then((selectedWorkersArray) => setStoredWorkersIDsOnSite(selectedWorkersArray));
+  }, []);
 
   const handleClick = (type) => {
     switch (type) {
       case 'delete':
+        deleteAllworkersOnSite(siteID);
         deleteSite(siteID, user.uid).then((sitesArray) => setSites(sitesArray));
         break;
       case 'edit':
@@ -43,7 +43,7 @@ const SiteCard = ({
   };
 
   return (
-    <Card style={{ width: '20rem' }}>
+    <Card style={{ width: '17rem' }}>
       <CardBody>
         <CardTitle tag="h5">Site:  </CardTitle>
       </CardBody>
@@ -53,20 +53,24 @@ const SiteCard = ({
         <CardText>Description: {siteDescription}</CardText>
         <CardText>Address: {siteAddress}</CardText>
         <CardText>The job is: {isJobFinished ? 'finished' : 'pending'}</CardText>
-        <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-          <DropdownToggle caret size="sm">
-            Small Button
+        <ButtonDropdown
+            isOpen={dropdownOpen}
+            toggle={toggle}>
+          <DropdownToggle disabled={storedWorkersIDsOnSite === null} caret size="sm">
+            Workers on Site
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem>
-              <FormGroup check>
-                <Label check>
-                  <Input type="checkbox" />{' '}
-                  Check me out
-                </Label>
-              </FormGroup>
-            </DropdownItem>
-            <DropdownItem>Another Action</DropdownItem>
+              {storedWorkersIDsOnSite && workers.map((workerInfo) => <DropdownItem
+                                                 key={workerInfo.workerID}
+                                                 id={workerInfo.workerID}
+                                                 toggle={false}
+                                               >
+                  {
+                    storedWorkersIDsOnSite.find((x) => x.workerID === workerInfo.workerID) ? <Label>
+                                                                               {workerInfo.workerName}
+                                                                             </Label> : ''
+                  }
+              </DropdownItem>)}
           </DropdownMenu>
         </ButtonDropdown>
         <Button color="success" onClick={() => handleClick('edit')}>
@@ -84,6 +88,7 @@ const SiteCard = ({
                         siteDescription={siteDescription}
                         isJobFinished={isJobFinished}
                         creatorID={creatorID}
+                        storedWorkersIDsOnSite={storedWorkersIDsOnSite}
                       />
           }
       </CardBody>
@@ -105,7 +110,8 @@ SiteCard.propTypes = {
   sitePicture: PropTypes.string.isRequired,
   siteDescription: PropTypes.string.isRequired,
   isJobFinished: PropTypes.bool.isRequired,
-  creatorID: PropTypes.string
+  creatorID: PropTypes.string,
+  workers: PropTypes.array.isRequired
 };
 
 export default SiteCard;

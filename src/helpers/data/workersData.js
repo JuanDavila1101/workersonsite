@@ -4,10 +4,14 @@ import firebaseConfig from '../apiKeys';
 const dbURL = firebaseConfig.databaseURL;
 
 const getWorkers = (uid) => new Promise((resolve, reject) => {
-  // console.warn(`${dbURL}/workers.json?orderBy="creatorID"&equalTo="${uid}"`);
-  // debugger;
   axios.get(`${dbURL}/workers.json?orderBy="creatorID"&equalTo="${uid}"`)
-    .then((response) => resolve(Object.values(response.data)))
+    .then((response) => {
+      if (response.data) {
+        resolve(Object.values(response.data));
+      } else {
+        resolve([]);
+      }
+    })
     .catch((error) => reject(error));
 });
 
@@ -31,7 +35,6 @@ const deleteWorker = (workerID, uid) => new Promise((resolve, reject) => {
 });
 
 const updateWorker = (workerObject, uid) => new Promise((resolve, reject) => {
-  // debugger;
   axios.patch(`${dbURL}/workers/${workerObject.workerID}.json`, workerObject)
     .then(() => {
       getWorkers(uid).then((workersArray) => resolve(workersArray));
