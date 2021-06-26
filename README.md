@@ -7,6 +7,15 @@ https://jid-workers-on-site.netlify.app/
 ### GitHub link
 https://github.com/JuanDavila1101/workersonsite
 
+You can download the this to your local maching with the command
+$Git clone git@github.com:JuanDavila1101/workersonsite.git
+
+To run
+$npm install
+$npm start
+### Loom Video
+https://www.loom.com/share/9915160ec8ef43f19b6fafca7531fc88
+
 ### Workers on Site App
 I plan to build an application to allow a business user to add sites that are on their scope of work
 and be able to assign workers to a site from a list of workers that allows them to see what workers are assigned to what site.
