@@ -8,7 +8,7 @@ function Header() {
     <>
     <div className="navbar-header">
       <Navbar color='light' light expand="md">
-        <h3 >Workers Site</h3>
+        <h3 >Workers on Site</h3>
       </Navbar>
     </div>
    </>
