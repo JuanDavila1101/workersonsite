@@ -1,9 +1,23 @@
 import React from 'react';
+import { Jumbotron, Container } from 'reactstrap';
 
 export default function Home() {
   return (
     <div>
-      <h2>Home screen</h2>
+      <Jumbotron fluid>
+        <Container fluid className="Jumbotron-Container">
+          <p>
+            <h1 className="display-3">Welcome</h1>
+          </p>
+          <p>
+            <h1 className="display-3">To</h1>
+          </p>
+          <p>
+            <h1 className="display-3">Workers In Site</h1>
+          </p>
+         {/* <h1 className="display-3">Welcome To Workers In Site</h1> */}
+        </Container>
+      </Jumbotron>
     </div>
   );
 }

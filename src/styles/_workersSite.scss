@@ -1,7 +1,5 @@
-.navbar {
-  display: flex;
-  text-justify: auto;
-  background-color: rgb(169, 154, 123);
+.themed-container {
+   background-color: rgb(25, 24, 22);
 }
 
 .buffer-container {
@@ -10,14 +8,34 @@
 }
 
 .center-container {
+  display: flex;
+  justify-content: center;
   background-color: rgb(169, 154, 123);
   height: 100%;
 }
 
 .main-container {
   height: 100%;
+  background-color: rgb(169, 154, 123);
 }
 
 .navbar-header {
   text-align: center;
+  background-color: rgb(169, 154, 123);
+}
+
+.navbar {
+  display: flex;
+  text-justify: auto;
+  width: 100%;
+  background-color: rgb(169, 154, 123);
+}
+
+// .nav-container {
+//   display: flex;
+// }
+
+.Jumbotron-Container {
+  display: flex;
+  justify-content: space-between;
 }
