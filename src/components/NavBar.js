@@ -12,6 +12,12 @@ const NavBar = ({ user }) => {
   const authenticated = () => (
     <>
       <NavItem>
+        <Link className="navbar-sites" to="/sites"> Sites </Link>
+      </NavItem>
+      <NavItem>
+        <Link className="navbar-workers" to="/workers"> Workers </Link>
+      </NavItem>
+      <NavItem>
         <Link className="nav-link" to="/sites-form"> Sites Form </Link>
       </NavItem>
       <NavItem>
@@ -23,9 +29,7 @@ const NavBar = ({ user }) => {
   return (
     <div className='nav-container'>
       <Navbar color='light' light expand="md">
-        <Link className="navbar-home" to="/"> Home </Link>
-        <Link className="navbar-sites" to="/sites"> Sites </Link>
-        <Link className="navbar-workers" to="/workers"> Workers </Link>
+          <Link className="navbar-home" to="/"> Home </Link>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>

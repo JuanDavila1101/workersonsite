@@ -51,6 +51,7 @@ const WorkerCard = ({
                         workerName={workerName}
                         workerPicture={workerPicture}
                         creatorID={creatorID}
+                        onEditMode={true}
                       />
           }
       </CardBody>

@@ -50,7 +50,6 @@ function App() {
             <Row>
              <Col sm="3">
                <div className="buffer-container">
-                 Buffer Left
                </div>
              </Col>
              <Col sm="6">
@@ -64,9 +63,8 @@ function App() {
                  />
                </div>
              </Col>
-             <Col className="buffer-container" sm="3">
+             <Col sm="3">
                <div className="buffer-container">
-                 Buffer Right
                </div>
              </Col>
             </Row>

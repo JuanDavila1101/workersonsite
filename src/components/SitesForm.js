@@ -5,7 +5,7 @@ import {
 import PropTypes from 'prop-types';
 import { addSite, updateSite } from '../helpers/data/sitesData';
 import { getWorkers } from '../helpers/data/workersData';
-import { getWorkersInSite } from '../helpers/data/WorkerInSiteData';
+import { getWorkersInSite, deleteWorkerInSite } from '../helpers/data/WorkerInSiteData';
 
 const SiteForm = ({
   formTitle,
@@ -18,6 +18,7 @@ const SiteForm = ({
   siteDescription,
   isJobFinished,
   creatorID,
+  onEditMode,
 }) => {
   const [site, setSite] = useState({
     siteID: siteID || null,
@@ -27,6 +28,7 @@ const SiteForm = ({
     siteDescription: siteDescription || '',
     isJobFinished: isJobFinished || false,
     creatorID: creatorID || user ? user.uid : '',
+    onEditMode: onEditMode || false,
   });
 
   const [dropdownOpen, setOpen] = useState(false);
@@ -34,11 +36,15 @@ const SiteForm = ({
   const [allWorkers, setAllWorkers] = useState([]);
   const [storedWorkersIDsOnSite, setStoredWorkersIDsOnSite] = useState([]);
   const [workersInSiteChanges0, setWorkersInSiteChanges0] = useState([]);
+  const [workersForChangesx2, setWorkersForChangesx2] = useState([]);
   const workersInSiteChanges = [];
 
   useEffect(() => {
     getWorkers(user ? user.uid : '').then((workersArray) => setAllWorkers(workersArray));
-    getWorkersInSite(site.siteID).then((selectedWorkersArray) => setStoredWorkersIDsOnSite(selectedWorkersArray));
+    getWorkersInSite(site.siteID).then((selectedWorkersArray) => {
+      setStoredWorkersIDsOnSite(selectedWorkersArray);
+      setWorkersForChangesx2(selectedWorkersArray);
+    });
   }, []);
 
   const handleSelectedWorkers = (selectedWorkerID) => {
@@ -52,6 +58,14 @@ const SiteForm = ({
       const obj = { siteID: null, workerID: selectedWorkerID };
       workersInSiteChanges.push(obj);
       setWorkersInSiteChanges0(workersInSiteChanges);
+    }
+    if (isWorkerOnSite0 === 'true') {
+      const indexOfWorker = storedWorkersIDsOnSite.findIndex((x) => x.workerID === selectedWorkerID);
+      if (indexOfWorker >= 0) {
+        storedWorkersIDsOnSite.splice(indexOfWorker, 1);
+
+        setWorkersInSiteChanges0(workersInSiteChanges);
+      }
     }
   };
 
@@ -67,6 +81,19 @@ const SiteForm = ({
     e.preventDefault();
     if (site.siteID) {
       updateSite(site, creatorID).then((sitesArray) => setSites(sitesArray));
+
+      allWorkers.forEach((worker) => {
+        if (workersInSiteChanges0.find((x) => x.workerID === worker.workerID)
+            && workersForChangesx2.find((x) => x.workerID === worker.workerID)) {
+          console.warn('do nothing');
+        } else if (workersInSiteChanges0.find((x) => x.workerID !== worker.workerID)
+            && workersForChangesx2.find((x) => x.workerID === worker.workerID)) {
+          deleteWorkerInSite(worker.workerIDe);
+        } else if (workersInSiteChanges0.find((x) => x.workerID === worker.workerID)
+            && workersForChangesx2.find((x) => x.workerID !== worker.workerID)) {
+          deleteWorkerInSite(worker.workerIDe);
+        }
+      });
     } else {
       addSite(site, user.uid, workersInSiteChanges0).then((sitesArray) => setSites(sitesArray));
     }
@@ -80,6 +107,13 @@ const SiteForm = ({
       isJobFinished: '',
       creatorID: '',
     });
+  };
+
+  const isWorkerSelected = (checkWorkerID) => {
+    if (workersInSiteChanges0.find((x) => x.workerID === checkWorkerID) || storedWorkersIDsOnSite.find((x) => x.workerID === checkWorkerID)) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -158,7 +192,7 @@ const SiteForm = ({
                        name='isWorkerChecked'
                        id={workerInfo.workerID}
                        type="checkbox"
-                       checked={workersInSiteChanges0.find((x) => x.workerID === workerInfo.workerID)}
+                       checked={isWorkerSelected(workerInfo.workerID)}
                        value={workersInSiteChanges0.find((x) => x.workerID === workerInfo.workerID)}
                        onClick={() => handleSelectedWorkers(workerInfo.workerID)}
                     />{' '}
@@ -187,7 +221,7 @@ SiteForm.propTypes = {
   siteDescription: PropTypes.string,
   isJobFinished: PropTypes.bool,
   creatorID: PropTypes.string,
-  workersIDsOnSite: PropTypes.array
+  onEditMode: PropTypes.bool,
 };
 
 export default SiteForm;

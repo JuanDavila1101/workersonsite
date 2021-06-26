@@ -38,5 +38,5 @@ const deleteAllworkersOnSite = (siteID) => new Promise((resolve, reject) => {
 });
 
 export {
-  getWorkersInSite, addWorkerToSite, deleteAllworkersOnSite
+  getWorkersInSite, addWorkerToSite, deleteAllworkersOnSite, deleteWorkerInSite
 };
