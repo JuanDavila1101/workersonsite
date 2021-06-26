@@ -86,6 +86,7 @@ const SiteCard = ({
           color="danger"
           onClick={() => handleClick('delete')}
           size="sm">Delete</Button>
+        </div>
           {editing && <SiteForm
                         formTitle='Edit Site'
                         setSites={setSites}
@@ -100,7 +101,6 @@ const SiteCard = ({
                         storedWorkersIDsOnSite={storedWorkersIDsOnSite}
                       />
           }
-        </div>
       </CardBody>
     </Card>
   );
