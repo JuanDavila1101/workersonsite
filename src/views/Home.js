@@ -6,16 +6,9 @@ export default function Home() {
     <div>
       <Jumbotron fluid>
         <Container fluid className="Jumbotron-Container">
-          <p>
             <h1 className="display-3">Welcome</h1>
-          </p>
-          <p>
             <h1 className="display-3">To</h1>
-          </p>
-          <p>
             <h1 className="display-3">Workers In Site</h1>
-          </p>
-         {/* <h1 className="display-3">Welcome To Workers In Site</h1> */}
         </Container>
       </Jumbotron>
     </div>

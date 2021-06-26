@@ -166,7 +166,7 @@ const SiteForm = ({
             />
           </FormGroup>
           <FormGroup>
-            <Label>Is the Job Site Finished
+            <div className="checkbox-container">
             <Input
               name='isJobFinished'
               id='isJobFinished'
@@ -174,10 +174,11 @@ const SiteForm = ({
               value={site.isJobFinished}
               onChange={handleInputChange}
             />
-            </Label>
+            <Label>Is the Job Site Finished </Label>
+            </div>
           </FormGroup>
-
-          <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+          <div className="button-container">
+          <Dropdown isOpen={dropdownOpen} toggle={toggle} size="sm">
             <DropdownToggle caret>
               Workers
             </DropdownToggle>
@@ -203,7 +204,8 @@ const SiteForm = ({
             </DropdownMenu>
           </Dropdown>
 
-          <Button type='submit'>Submit</Button>
+          <Button type='submit' size="sm">Submit</Button>
+          </div>
         </Form>
       </div>
     </>

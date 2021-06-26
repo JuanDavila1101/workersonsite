@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // import { useHistory } from 'react-router-dom';
 import {
-  Button, Card, CardTitle, CardBody, CardSubtitle
+  Button, Card, CardTitle, CardBody
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { deleteWorker } from '../helpers/data/workersData';
@@ -34,15 +34,21 @@ const WorkerCard = ({
   return (
     <Card style={{ width: '20rem' }}>
       <CardBody>
-        <CardTitle tag="h5">Worker:  </CardTitle>
+        <CardTitle tag="h5">Worker: {workerName}</CardTitle>
       </CardBody>
       <img width="100%" src={workerPicture} alt="Worker Image"/>
       <CardBody>
-        <CardSubtitle tag="h6" className="mb-2 text-muted">{workerName}</CardSubtitle>
-        <Button color="success" onClick={() => handleClick('edit')}>
+       <div className="button-container">
+        <Button
+          color="success"
+          onClick={() => handleClick('edit')}
+           size="sm">
           {editing ? 'Close Form' : 'Edit Worker'}
         </Button>
-        <Button color="danger" onClick={() => handleClick('delete')}>Delete this Worker</Button>
+        <Button
+          color="danger"
+          onClick={() => handleClick('delete')}
+          size="sm">Delete this Worker</Button>
           {editing && <WorkerForm
                         formTitle='Edit Worker'
                         setWorkers={setWorkers}
@@ -54,6 +60,7 @@ const WorkerCard = ({
                         onEditMode={true}
                       />
           }
+       </div>
       </CardBody>
     </Card>
   );
