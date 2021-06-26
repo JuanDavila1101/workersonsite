@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Button, Card, CardText, CardTitle, CardBody, CardSubtitle, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Label
+  Button, Card, CardText, CardTitle, CardBody, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Label
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { deleteSite } from '../helpers/data/sitesData';
@@ -45,19 +45,22 @@ const SiteCard = ({
   return (
     <Card style={{ width: '17rem' }}>
       <CardBody>
-        <CardTitle tag="h5">Site:  </CardTitle>
+        <CardTitle tag="h5">Site: {siteName}</CardTitle>
       </CardBody>
       <img width="100%" src={sitePicture} alt="Site Image"/>
       <CardBody>
-        <CardSubtitle tag="h6" className="mb-2 text-muted">{siteName}</CardSubtitle>
         <CardText>Description: {siteDescription}</CardText>
         <CardText>Address: {siteAddress}</CardText>
         <CardText>The job is: {isJobFinished ? 'finished' : 'pending'}</CardText>
+        <div className="button-container">
         <ButtonDropdown
             isOpen={dropdownOpen}
-            toggle={toggle}>
-          <DropdownToggle disabled={storedWorkersIDsOnSite === null} caret size="sm">
-            Workers on Site
+            toggle={toggle}
+            size="sm">
+          <DropdownToggle
+            disabled={storedWorkersIDsOnSite === null}
+            caret size="sm">
+            Workers
           </DropdownToggle>
           <DropdownMenu>
               {storedWorkersIDsOnSite && workers.map((workerInfo) => <DropdownItem
@@ -73,10 +76,16 @@ const SiteCard = ({
               </DropdownItem>)}
           </DropdownMenu>
         </ButtonDropdown>
-        <Button color="success" onClick={() => handleClick('edit')}>
+        <Button
+          color="success"
+          onClick={() => handleClick('edit')}
+          size="sm">
           {editing ? 'Close Form' : 'Edit Site'}
         </Button>
-        <Button color="danger" onClick={() => handleClick('delete')}>Delete this Site</Button>
+        <Button
+          color="danger"
+          onClick={() => handleClick('delete')}
+          size="sm">Delete</Button>
           {editing && <SiteForm
                         formTitle='Edit Site'
                         setSites={setSites}
@@ -91,6 +100,7 @@ const SiteCard = ({
                         storedWorkersIDsOnSite={storedWorkersIDsOnSite}
                       />
           }
+        </div>
       </CardBody>
     </Card>
   );

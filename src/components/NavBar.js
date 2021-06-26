@@ -12,10 +12,10 @@ const NavBar = ({ user }) => {
   const authenticated = () => (
     <>
       <NavItem>
-        <Link className="navbar-sites" to="/sites"> Sites </Link>
+        <Link className="nav-link" to="/sites"> Sites </Link>
       </NavItem>
       <NavItem>
-        <Link className="navbar-workers" to="/workers"> Workers </Link>
+        <Link className="nav-link" to="/workers"> Workers </Link>
       </NavItem>
       <NavItem>
         <Link className="nav-link" to="/sites-form"> Sites Form </Link>
@@ -31,7 +31,7 @@ const NavBar = ({ user }) => {
       <Navbar color='light' light expand="md">
           <Link className="navbar-home" to="/"> Home </Link>
         <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
+        <Collapse isOpen={isOpen} className="nav-link" navbar>
           <Nav className="mr-auto" navbar>
             {user && authenticated()}
               {
