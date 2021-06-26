@@ -1,13 +1,18 @@
 ## This is Worker on Site
 
-## Being able to create Sites and Workers, and assign workers to sites
+## Workers on site
+### Netlify link
+https://jid-workers-on-site.netlify.app/
 
-## The Workers on Site ERD Reference is: https://dbdiagram.io/embed/60b24abbb29a09603d171867
+### GitHub link
+https://github.com/JuanDavila1101/workersonsite
 
+### Workers on Site App
+I plan to build an application to allow a business user to add sites that are on their scope of work
+and be able to assign workers to a site from a list of workers that allows them to see what workers are assigned to what site.
 
-
-
-
+The overall need of the application is that business owners have a hard time quantifying a job site with the estimation of a proposal,
+materials and workers on site.
 
 # React Template
 
